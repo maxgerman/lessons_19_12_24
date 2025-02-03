@@ -1,160 +1,234 @@
-import functools
-import inspect
-import time
-from collections import defaultdict
+from abc import abstractmethod
 
 
-count = defaultdict(int)  # dict with count by func name, k = func name, v = count
+# algorithms
+
+# CS50 Harvard
+# complexity - O(N)
 
 
-def count_calls(func):
-    def wrapper(*args, **kwargs):
-        count[func.__name__] += 1
-        return func(*args, **kwargs)
+# bubble sort
+def bubble_sort(arr):
+    # Outer loop to iterate through the list n times
+    for n in range(len(arr) - 1, 0, -1):
 
-    return wrapper
+        # Initialize swapped to track if any swaps occur
+        swapped = False
 
+        # Inner loop to compare adjacent elements
+        for i in range(n):
+            if arr[i] > arr[i + 1]:
+                # Swap elements if they are in the wrong order
+                arr[i], arr[i + 1] = arr[i + 1], arr[i]
 
-def remember_params(save_to: list):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            save_to.append([args, kwargs])
-            return func(*args, **kwargs)
+                # Mark that a swap has occurred
+                swapped = True
 
-        return wrapper
-
-    return decorator
-
-
-def timer(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        start = time.time()  # big float
-        res = func(*args, **kwargs)
-        if len(inspect.stack()) <= 3:
-            print(f"func {func.__name__} ran for {time.time() - start:.5f} sec")
-        return res
-
-    return wrapper
+        # If no swaps occurred, the list is already sorted
+        if not swapped:
+            break
 
 
-param_list_1 = []  # recipient
-
-
-@remember_params(save_to=param_list_1)
-@count_calls
-def api_call(a: str):
-    # this is paid, fixed price
-    # similar func are in the proj
-    return {"key": f"paid value for {a}"}
-
-
-# @remember_params(save_to=param_list_1)
-# @count_calls
-
-
-@timer
-def api_call_2(a: str, b: int):
-    return {"key": f"paid value for {a} and {b}"}
-
-
-# print(api_call("abc"))
-# print(api_call("dfe"))
-# print(api_call_2("one", b=2))
+# # Sample list to be sorted
+# arr = [39, 12, 18, 85, 72, 10, 2, 18]
+# print("Unsorted list is:")
+# print(arr)
 #
+# bubble_sort(arr)
 #
-# print(dict(count))
-# print(param_list_1)
+# print("Sorted list is:")
+# print(arr)
+#
+
+# binary tree, (b-tree, more nodes)
+# Returns index of x in arr if present, else -1
+def binary_search(arr, low, high, x):
+    # Check base case
+    if high >= low:
+
+        mid = (high + low) // 2
+
+        # If element is present at the middle itself
+        if arr[mid] == x:
+            return mid
+
+        # If element is smaller than mid, then it can only
+        # be present in left subarray
+        elif arr[mid] > x:
+            return binary_search(arr, low, mid - 1, x)
+
+        # Else the element can only be present in right subarray
+        else:
+            return binary_search(arr, mid + 1, high, x)
+
+    else:
+        # Element is not present in the array
+        return -1
 
 
-def memoize(func):
-    cache = {}
+# O(N)
 
-    @functools.wraps(func)
-    def wrapper(*args):
-        if args in cache:
-            print("cache hit!")
-            return cache[args]
+# nested loop
 
-        res = func(*args)
-        print("running function without cache")
-        cache[args] = res
-        return res
 
+# O(N2)
+# for i in ...
+#     for j in ...
+
+
+# space complexity - same O(N) notation
+
+
+
+## files
+
+# text files - text and encodings
+# binary files - bits and bytes, random data
+
+# modes: r (read), w (write), a (append)
+# file = open('my_file.txt', 'a')
+# file.write("\nhello world again")
+# file.close()
+
+
+
+# file = open('my_file.txt', 'rt')
+# text = file.read()
+# ...
+# file.close()
+# print(text)
+
+# file - file-like object / buffer / stream
+with open('my_file.txt', 'rt') as file:
+    print(file.read())  # exeptions
+    # context manager block (indented)
+    file.seek(0)
+    print("read again: ", file.read())
+print("context manager closed -- file closed")
+
+from io import StringIO
+
+
+
+
+# one more example of context manager - for db
+# with session() as db:
+#     db.query(stmt)
+
+# db connection closed
+
+# ====================
+
+
+# OOP - object-oriented programming - paradigm
+
+# entities:
+# - classes - blueprint - e.g. Car
+# -- instantiation / creation of obj
+# - instance (aka екземпляр, object) (e.g. Corolla, 1994, green)
+
+# - fields (data of the object) -- described in class; concrete values in instances
+# - methods
+
+class Car:
+    # constructor
+    # def __new__(cls, *args, **kwargs):
+    #     ...
+
+    # initializer
+    def __init__(self, model: str, year: int):  # dunder = double underscore / magic methods
+        self.model = model
+        self.year = year
+        # returns None
+
+    def beep(self, n: int):
+        for _ in range(n):
+            print(f"{self.model} beeps!")
+
+    def _gas_pump_start(self):
+        pass
+
+    def __super_internal(self):
+        pass
+
+    def drive(self):
+        self._gas_pump_start()
+        pass
+
+
+car = Car("Corolla", 1994)
+car2 = Car("Accord", 2000)
+print(car)
+print(car.model)
+print(car.year)
+print(car2.model)
+print(car.beep(3))
+print(car2.beep(1))
+# car.__super_internal()
+
+
+class Animal:  # parent class, base class, superclass, батьківський клас
+    def speak(self):
+        print("woof-woof")
+
+    def identify(self):
+        print("I'm animal")
+
+    def digest_food(self):
+        # complex
+        pass
+
+
+
+class AbstractAnimal:  # parent class, base class, superclass, батьківський клас
+    @abstractmethod
+    def speak(self):
+        pass
+
+class ConcreteAnimal1(AbstractAnimal):
+    def speak(self):
+
+
+
+class Dog(Animal):  # subclass, child class, підклас
+    def speak(self):
+        super().speak()
+        print("bark!")
+
+dog = Dog()
+dog.speak()
+dog.identify()
+car._gas_pump_start()
+
+for animal in [cat1, dog2, ...]:
+    animal.speak()  # polymorphism
+
+# OOP principles:
+
+# 1. inheritance
+# 2. polymorphism
+# 3. encapsulation - "black box", implementation details - "private" attributes
+# 4. (abstraction)
+
+
+# patterns
+
+
+# float + float = float
+# int + int = int
+#
+# square1 + square2 = square3
+# "a" + "b"
+
+def counter(func):
+    c = 0
+    def wrapper(*args, **kwargs):
+        nonlocal c
+        c += 1
+        func(*args, **kwargs)
+        return c
     return wrapper
 
-
-# Redis
-
-
-# @functools.lru_cache  # LRU - least recently used
-@timer
-@memoize
-def fibo(n):
-    if n < 2:
-        return n
-    return fibo(n - 1) + fibo(n - 2)
-
-
-# print(fibo(15))  # func fibo ran for 3.55941 sec
-
-# print(fibo(50))
-
-
-########
-
-
-def print_table(n):
-    width = 5
-    for i in range(1, n + 1):
-        for j in range(1, n + 1):
-            print(f"{i*j:{width}d}", end=" ")
-        print()  # new row
-
-
-# print_table(15)
-
-# generators
-database = range(1_000_000000000000)  # limit, offset
-
-
-def get_next_page(page_number: int = 1):
-    page_size = 10  # limit
-    while True:
-        yield list(
-            database[page_size * page_number - page_size: page_size * page_number]
-        )  # simulation of db query
-        page_number += 1
-
-
-gen = get_next_page()
-print(next(gen))
-print(next(gen))
-
-print(next(gen))
-print(next(gen))
-
-
-for _ in range(10):
-    print(next(gen))
-
-# for element in gen:
-#     print(element)
-
-
-def fibonacci_gen():
-    a, b = 0, 1
-    while True:
-        val = yield a
-        a, b = b, a + b
-
-
-fibo_gen = fibonacci_gen()
-for el in range(10):
-    print(next(fibo_gen))
-    fibo_gen.send(123)
-
-# async / await
-# threads, race condition
-
-# asyncio
+@counter
+def example_function():
+    print("Inside the function")
