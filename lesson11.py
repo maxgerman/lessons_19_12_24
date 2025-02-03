@@ -40,6 +40,7 @@ def bubble_sort(arr):
 # print(arr)
 #
 
+
 # binary tree, (b-tree, more nodes)
 # Returns index of x in arr if present, else -1
 def binary_search(arr, low, high, x):
@@ -79,7 +80,6 @@ def binary_search(arr, low, high, x):
 # space complexity - same O(N) notation
 
 
-
 ## files
 
 # text files - text and encodings
@@ -91,7 +91,6 @@ def binary_search(arr, low, high, x):
 # file.close()
 
 
-
 # file = open('my_file.txt', 'rt')
 # text = file.read()
 # ...
@@ -99,7 +98,7 @@ def binary_search(arr, low, high, x):
 # print(text)
 
 # file - file-like object / buffer / stream
-with open('my_file.txt', 'rt') as file:
+with open("my_file.txt", "rt") as file:
     print(file.read())  # exeptions
     # context manager block (indented)
     file.seek(0)
@@ -107,8 +106,6 @@ with open('my_file.txt', 'rt') as file:
 print("context manager closed -- file closed")
 
 from io import StringIO
-
-
 
 
 # one more example of context manager - for db
@@ -130,13 +127,16 @@ from io import StringIO
 # - fields (data of the object) -- described in class; concrete values in instances
 # - methods
 
+
 class Car:
     # constructor
     # def __new__(cls, *args, **kwargs):
     #     ...
 
     # initializer
-    def __init__(self, model: str, year: int):  # dunder = double underscore / magic methods
+    def __init__(
+        self, model: str, year: int
+    ):  # dunder = double underscore / magic methods
         self.model = model
         self.year = year
         # returns None
@@ -179,15 +179,15 @@ class Animal:  # parent class, base class, superclass, батьківський 
         pass
 
 
-
 class AbstractAnimal:  # parent class, base class, superclass, батьківський клас
     @abstractmethod
     def speak(self):
         pass
 
+
 class ConcreteAnimal1(AbstractAnimal):
     def speak(self):
-
+        pass
 
 
 class Dog(Animal):  # subclass, child class, підклас
@@ -195,13 +195,14 @@ class Dog(Animal):  # subclass, child class, підклас
         super().speak()
         print("bark!")
 
+
 dog = Dog()
 dog.speak()
 dog.identify()
 car._gas_pump_start()
 
-for animal in [cat1, dog2, ...]:
-    animal.speak()  # polymorphism
+# for animal in [cat1, dog2, ...]:
+#     animal.speak()  # polymorphism
 
 # OOP principles:
 
@@ -220,14 +221,18 @@ for animal in [cat1, dog2, ...]:
 # square1 + square2 = square3
 # "a" + "b"
 
+
 def counter(func):
     c = 0
+
     def wrapper(*args, **kwargs):
         nonlocal c
         c += 1
         func(*args, **kwargs)
         return c
+
     return wrapper
+
 
 @counter
 def example_function():
